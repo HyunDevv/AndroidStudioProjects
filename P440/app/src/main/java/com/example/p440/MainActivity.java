@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
                     true
 
             );
-            ImageView im = view.findViewById(R.id.imageView);
             TextView tx_name = view.findViewById(R.id.tx_name);
             TextView tx_birth = view.findViewById(R.id.tx_birth);
             TextView tx_phone = view.findViewById(R.id.tx_phone);
