@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     public void ck(View v){
         String id = tx_id.getText().toString();
         String pwd = tx_pwd.getText().toString();
-        String url = "http://192.168.0.28/android/login.jsp";
+        String url = "http://192.168.0.103/android/login.jsp";
         url += "?id="+id+"&pwd="+pwd;
         //String result = HttpConnect.getString(url); <- 서브스레드 안에서 해야한다!!
                 httpAsync = new HttpAsync();
@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
             String s1 = s.trim();
-            Log.d("[TEST]",s1+"    "+s.getClass().getName());
 
             if(s1.equals("1")){
                 Intent intent = new Intent(getApplicationContext(),SecondActivity.class);
