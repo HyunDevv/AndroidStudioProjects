@@ -1,13 +1,21 @@
 package com.example.p287;
 
 import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.google.android.gms.maps.SupportMapFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,10 +25,25 @@ public class MainActivity extends AppCompatActivity {
 
     ActionBar actionBar; // 메뉴 만들기 (androidx를 가져와야 한다)
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //권한 설정 요청
+        String [] permission = {
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        };
+        ActivityCompat.requestPermissions(this,permission,101);
+
+        // LOCATION 권한을 허용하지 않으면 앱을 종료시킨다
+        if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED
+                || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED){
+            return;
+        }
 
         fragment1 = new Fragment1();
 //        fragment1 = (Fragment1)getSupportFragmentManager().findFragmentById(

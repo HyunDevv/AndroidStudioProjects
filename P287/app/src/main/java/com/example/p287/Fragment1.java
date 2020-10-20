@@ -29,7 +29,6 @@ public class Fragment1 extends Fragment {
         viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_1,container,false);
         textView = viewGroup.findViewById(R.id.textView);
         editText = viewGroup.findViewById(R.id.editText);
-        button5 = viewGroup.findViewById(R.id.button5);
         imageView = viewGroup.findViewById(R.id.imageView);
 
         imageView.setOnClickListener(new View.OnClickListener(){
