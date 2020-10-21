@@ -9,12 +9,12 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/m2"
-        android:icon="@drawable/h2"
+        android:icon="@drawable/icon"
         android:title="menu2"
         app:showAsAction="always" />
     <item
         android:id="@+id/m3"
-        android:icon="@drawable/h5"
+        android:icon="@drawable/d2"
         android:title="menu3"
         app:showAsAction="always" />
 </menu>

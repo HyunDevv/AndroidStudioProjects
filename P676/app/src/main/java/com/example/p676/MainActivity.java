@@ -22,6 +22,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+// 메인엑티비티에서 지도를 띄운다!
 public class MainActivity extends AppCompatActivity {
 
     SupportMapFragment supportMapFragment;
@@ -34,15 +35,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         getSupportActionBar().hide(); // 액션바 없에기
 
         //권한 설정 요청
         String [] permission = {
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_COARSE_LOCATION //자기위치버튼 만들 때 있어야 함!
         };
         ActivityCompat.requestPermissions(this,permission,101);
 
+        //supportMapFragment를 사용해 지도를 띄운다
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -55,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                gmap.setMyLocationEnabled(true); //자기 위치로 가는 버튼 추가(기능도 있음!)
-                LatLng latlng = new LatLng(33.354124, 126.568358);
+                gmap.setMyLocationEnabled(true); //자기 위치로 가는 버튼 추가
+                LatLng latlng = new LatLng(33.354124, 126.568358); //제주도 좌표
                 gmap.addMarker(
                         new MarkerOptions().position(latlng).title("제주도")
                 );
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.textView);
 
 
-        // 권한이 허용되어 내려오면 진행
+        // 권한이 허용되어 내려오면 아래 진행
         MyLocation myLocation = new MyLocation();
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
@@ -81,9 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 myLocation // 여기서 받는다
         );
 
-
     } //end onCreate
-
 
 
     class MyLocation implements LocationListener {
@@ -96,7 +97,8 @@ public class MainActivity extends AppCompatActivity {
             textView.setText(lat+" "+lon);
 
             LatLng latlng = new LatLng(lat, lon);
-//            gmap.addMarker(
+//            //마커를 찍는다다
+//           gmap.addMarker(
 //                    new MarkerOptions().position(latlng).title("My Point")
 //            );
             //gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 12));

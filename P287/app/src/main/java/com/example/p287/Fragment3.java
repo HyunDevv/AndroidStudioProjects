@@ -1,7 +1,6 @@
 package com.example.p287;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -20,103 +19,59 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Fragment3 extends Fragment {
-    public Fragment3(){}
 
-    SupportMapFragment supportMapFragment;
-    GoogleMap gmap;
+    MapView gmap;
 
-    TextView textView;
-    LocationManager locationManager;
-    Fragment map;
+    public Fragment3() {
 
+    }
 
-    @SuppressLint("MissingPermission")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_3, container, false);
+        gmap = (MapView) v.findViewById(R.id.map);
+        gmap.onCreate(savedInstanceState);
+        gmap.onResume();
 
-        ViewGroup viewGroup = null;
-        viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_2,container,false);
-        textView = viewGroup.findViewById(R.id.textView);
+        MapsInitializer.initialize(getActivity().getApplicationContext());
 
-        supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
-            @SuppressLint("MissingPermission")
+        gmap.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                gmap = googleMap;
+                LatLng latlng = new LatLng(34.1742, -118.4580);
 
-                gmap.setMyLocationEnabled(true); //자기 위치로 가는 버튼 추가(기능도 있음!)
-                LatLng latlng = new LatLng(33.354124, 126.568358);
-                gmap.addMarker(
-                        new MarkerOptions().position(latlng).title("제주도")
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                     return;
+                }
+                googleMap.setMyLocationEnabled(true);
+
+                googleMap.addMarker(
+                        new MarkerOptions().position(latlng).
+                                title("공항").snippet("xxx")
                 );
-                gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 10)); //10은 줌 레벨
-
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng,10));
             }
-        }); //지도를 뿌리겠다..
+        });
+
+        return v;
 
 
-        //Location
-        // 권한이 허용되어 내려오면 진행
-        MyLocation myLocation = new MyLocation();
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-
-        locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, //GPS,NETWORK,PASSIVE 3종류가 있다
-                1, // 이 시간마다 갱신
-                0, // 조금만 움직(미터)여도 좌표를 받는다
-                myLocation // 여기서 받는다
-        );
-
-        return inflater.inflate(R.layout.fragment_3, container, false);
-    } // end onCreatView
-
-
-
-    class MyLocation implements LocationListener {
-
-        //위치가 바뀌면 자동으로 좌표를 불러들인다
-        @Override
-        public void onLocationChanged(@NonNull Location location) {
-            double lat = location.getLatitude();
-            double lon = location.getLongitude();
-            textView.setText(lat+" "+lon);
-
-            LatLng latlng = new LatLng(lat, lon);
-//            gmap.addMarker(
-//                    new MarkerOptions().position(latlng).title("My Point")
-//            );
-            //gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 12));
-        }
     }
 
 
-//    //앱 정지 시 (자기위치를 안 추적한다)
-//    @SuppressLint("MissingPermission") //빨간색전등 눌러서 퍼미션은 이미 확인했으니 여기서 확인받지않는다!
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        if(gmap != null){
-//            gmap.setMyLocationEnabled(false);
-//        }
-//    }
-//
-//    //앱 실행 다시실행 시
-//    @SuppressLint("MissingPermission")
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        if(gmap != null){
-//            gmap.setMyLocationEnabled(true);
-//        }
-//    }
-
 
 }
+
+
+
+
+
