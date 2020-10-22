@@ -169,6 +169,7 @@ public class SecondActivity extends AppCompatActivity {
             LayoutInflater inflater =
                     (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             itemView = inflater.inflate(R.layout.movie, container, true);
+
             TextView tx_rank = itemView.findViewById(R.id.textView);
             TextView tx_movieNm = itemView.findViewById(R.id.textView3);
 

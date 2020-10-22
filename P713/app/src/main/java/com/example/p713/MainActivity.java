@@ -74,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
                     if (manager.getNotificationChannel("ch2") == null) {
                         manager.createNotificationChannel(
                                 new NotificationChannel("ch2", "chname", NotificationManager.IMPORTANCE_DEFAULT));
-                        builder = new NotificationCompat.Builder(context, "ch2");
                     }
+                    builder = new NotificationCompat.Builder(context, "ch2");
                 } else {
                     builder = new NotificationCompat.Builder(context);
                 }
@@ -95,6 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-    };
+    }; // end BroadcastReceiver
 }
 

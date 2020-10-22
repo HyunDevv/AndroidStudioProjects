@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/tab1"
+        android:icon="@drawable/d1"
+        android:title="리스트"
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/tab2"
+        android:icon="@drawable/d2"
+        android:title="지도"
+        app:showAsAction="ifRoom|withText" />
+</menu>
