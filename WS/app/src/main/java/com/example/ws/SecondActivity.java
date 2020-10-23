@@ -76,7 +76,7 @@ public class SecondActivity extends AppCompatActivity {
         });  // end function
 
 
-        //FCM사용
+        // FCM사용 (앱이 중단되어 있을 때 기본적으로 title,body값으로 푸시!!)
         FirebaseMessaging.getInstance().subscribeToTopic("car").
                 addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -90,9 +90,10 @@ public class SecondActivity extends AppCompatActivity {
                     }
                 });
 
+
+        // 여기서 부터는 앱 실행상태에서 상태바 설정!!
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this); // 브로드캐스트를 받을 준비
         lbm.registerReceiver(receiver, new IntentFilter("notification")); // notification이라는 이름의 정보를 받겠다
-
     } // end onCreate
 
 
@@ -104,7 +105,7 @@ public class SecondActivity extends AppCompatActivity {
                 String title = intent.getStringExtra("title");
                 String control = intent.getStringExtra("control");
                 String data = intent.getStringExtra("data");
-                //tx.setText(control + " " + data);
+                Log.d("[TAG]",control + " " + data);
                 Toast.makeText(SecondActivity.this, title + " " + control + " " + data, Toast.LENGTH_SHORT).show();
 
 
@@ -121,14 +122,16 @@ public class SecondActivity extends AppCompatActivity {
                     builder = new NotificationCompat.Builder(context);
                 }
 
-                Intent intent1 = new Intent(context, MainActivity.class);
+                Intent intent1 = new Intent(context, SecondActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(
                         context, 101, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 builder.setAutoCancel(true);
                 builder.setContentIntent(pendingIntent);
+                //상단바 타이틀 설정
                 builder.setContentTitle(title);
-                builder.setContentText(control + " " + data);
+                //상단바 내용 설정
+                builder.setContentText(control + " " + data + "할인!!");
                 builder.setSmallIcon(R.drawable.d1);
                 Notification noti = builder.build();
                 manager.notify(1, noti);
@@ -138,5 +141,11 @@ public class SecondActivity extends AppCompatActivity {
 
     }; // end BroadcastReceiver
 
+
+    @Override
+    protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onDestroy();
+    }
 
 }

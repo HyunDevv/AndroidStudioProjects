@@ -3,6 +3,7 @@ package com.example.ws;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -57,47 +58,30 @@ public class Fragment1 extends Fragment {
 
         getData();
 
-//        //리스트 클릭 이벤트 처리
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent,
-//                                    View view, final int position, long id) {
-//
-//                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-//
-//                LayoutInflater layoutInflater = getLayoutInflater();
-//                View dview = layoutInflater.inflate(R.layout.dialog,
-//                        (ViewGroup) findViewById(R.id.dlayout));
-//                ImageView dimg = dview.findViewById(R.id.imageView2);
-//                dimg.setImageResource(persons.get(position).getImg());
-//                builder.setView(dview);
-//
-//
-//                builder.setTitle("NAME:" + persons.get(position).getName());
-//                //여기 datas를 사용하려면 final이 되어야 한다
-//                builder.setMessage(persons.get(position).id + "");
-//
-//                //OK
-//                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//
-//                    }
-//                });
-//                //NO를 누르면 그대로
-//                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//
-//                    }
-//                });
-//
-//                builder.show();
-//
-//            }
-//        });
+        //리스트 클릭 이벤트 처리
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent,
+                                    View view, final int position, long id) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
 
+                builder.setTitle(movies.get(position).getMovieNm());
+                builder.setMessage("일별 박스오피스 "+movies.get(position).rank + "위\n개봉일 : "+movies.get(position).openDt+"\n일별관람객 수 : "+movies.get(position).showCnt+"명");
+
+                //OK
+                builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                builder.show();
+
+            }
+        });
 
 
         return viewGroup;
