@@ -1,13 +1,29 @@
 package com.example.tcpip;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.msg.Msg;
 
 import java.io.IOException;
@@ -29,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
     Sender sender;
 
+    NotificationManager manager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,13 +56,76 @@ public class MainActivity extends AppCompatActivity {
         et_ip = findViewById(R.id.et_ip);
         et_msg = findViewById(R.id.et_msg);
         port = 5555;
-        address = "192.168.0.28";
+        address = "192.168.0.103";
         id="[JaeHyun]";
 
         new Thread(con).start();
 
+        // FCM사용 (앱이 중단되어 있을 때 기본적으로 title,body값으로 푸시!!)
+        FirebaseMessaging.getInstance().subscribeToTopic("car").
+                addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "FCM Complete...";
+                        if (!task.isSuccessful()) {
+                            msg = "FCM Fail";
+                        }
+                        Log.d("[TAG]", msg);
 
-    }
+                    }
+                });
+
+
+        // 여기서 부터는 앱 실행상태에서 상태바 설정!!
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this); // 브로드캐스트를 받을 준비
+        lbm.registerReceiver(receiver, new IntentFilter("notification")); // notification이라는 이름의 정보를 받겠다
+
+    } // end OnCreate
+
+    // MyFService.java의 intent 정보를 BroadcastReceiver를 통해 받는다
+    public BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                String title = intent.getStringExtra("title");
+                String control = intent.getStringExtra("control");
+                String data = intent.getStringExtra("data");
+                Toast.makeText(MainActivity.this, title + " " + control + " " + data, Toast.LENGTH_SHORT).show();
+
+
+                // 상단알람 사용
+                manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                NotificationCompat.Builder builder = null;
+                if (Build.VERSION.SDK_INT >= 26) {
+                    if (manager.getNotificationChannel("ch2") == null) {
+                        manager.createNotificationChannel(
+                                new NotificationChannel("ch2", "chname", NotificationManager.IMPORTANCE_DEFAULT));
+                    }
+                    builder = new NotificationCompat.Builder(context, "ch2");
+                } else {
+                    builder = new NotificationCompat.Builder(context);
+                }
+
+                Intent intent1 = new Intent(context, MainActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(
+                        context, 101, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                builder.setAutoCancel(true);
+                builder.setContentIntent(pendingIntent);
+                //상단바 타이틀 설정
+                builder.setContentTitle(title);
+                //상단바 내용 설정
+                builder.setContentText(control + " " + data);
+                builder.setSmallIcon(R.drawable.a1);
+                Notification noti = builder.build();
+                manager.notify(1, noti);
+            }
+
+        }
+
+    };
+
+
 
     @Override
     public void onBackPressed() {
