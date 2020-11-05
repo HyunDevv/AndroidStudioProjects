@@ -38,9 +38,16 @@
         android:text="Button" />
 
     <TextView
+        android:id="@+id/tx_sen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <TextView
         android:id="@+id/tx_msg"
         android:layout_width="match_parent"
-        android:layout_height="565dp"
+        android:layout_height="match_parent"
         android:background="#FF9800"
         android:hint="msg" />
+
 </LinearLayout>

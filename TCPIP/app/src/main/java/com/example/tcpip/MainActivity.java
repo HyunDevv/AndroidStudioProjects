@@ -13,6 +13,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,7 +36,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
-    TextView tx_list, tx_msg;
+    TextView tx_list, tx_msg,tx_sen;
     EditText et_ip, et_msg;
 
     int port;
@@ -47,16 +48,20 @@ public class MainActivity extends AppCompatActivity {
 
     NotificationManager manager;
 
+    HttpAsync httpAsync;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tx_list = findViewById(R.id.tx_list);
         tx_msg = findViewById(R.id.tx_msg);
+        tx_sen = findViewById(R.id.tx_sen);
         et_ip = findViewById(R.id.et_ip);
         et_msg = findViewById(R.id.et_msg);
-        port = 5555;
-        address = "192.168.0.103";
+        port = 5556;
+        address = "192.168.0.28";
         id="[JaeHyun]";
 
         new Thread(con).start();
@@ -80,7 +85,48 @@ public class MainActivity extends AppCompatActivity {
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this); // 브로드캐스트를 받을 준비
         lbm.registerReceiver(receiver, new IntentFilter("notification")); // notification이라는 이름의 정보를 받겠다
 
+        getSensor();
+
+//        while(true){
+//            getSensor();
+//            try {
+//                Thread.sleep(5000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+
+
     } // end OnCreate
+
+
+    // 웹서버에서 센서값을 받아오자!
+    public void getSensor(){
+        String url = "http://192.168.0.28/tcpip1/car.jsp";
+        //url += "?id="+id+"&pwd="+pwd;
+        //String result = HttpConnect.getString(url); <- 서브스레드 안에서 해야한다!!
+        httpAsync = new HttpAsync();
+        httpAsync.execute(url);
+    }
+
+    class HttpAsync extends AsyncTask<String,Void,String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String url = strings[0];
+            String result = HttpConnect.getString(url); //result는 JSON
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            tx_sen.setText(s);
+        }
+
+    }
+
+
 
     // MyFService.java의 intent 정보를 BroadcastReceiver를 통해 받는다
     public BroadcastReceiver receiver = new BroadcastReceiver() {
